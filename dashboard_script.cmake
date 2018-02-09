@@ -147,7 +147,7 @@ set(CTEST_MODEL Experimental)
 #######################################################################
 # INSPECT : START a fake dashboard using only configure to run inspect
 #######################################################################
-if (PYCICLE_PROJECT_NAME MATCHES "hpx")
+#if (PYCICLE_PROJECT_NAME MATCHES "hpx")
   message("Initialize dashboard : ${CTEST_MODEL} ...")
   set(CTEST_BINARY_DIRECTORY "${PYCICLE_BINARY_DIRECTORY}/inspect")
   ctest_start(${CTEST_MODEL}
@@ -164,7 +164,7 @@ if (PYCICLE_PROJECT_NAME MATCHES "hpx")
   message("Running inspect...")
   ctest_configure()
   ctest_submit(PARTS Configure)
-endif()
+#endif()
 
 #######################################################################
 # Erase any test complete status before starting new dashboard run
