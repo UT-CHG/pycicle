@@ -147,7 +147,7 @@ set(CTEST_MODEL Experimental)
 #######################################################################
 # INSPECT : START a fake dashboard using only configure to run inspect
 #######################################################################
-#if (PYCICLE_PROJECT_NAME MATCHES "hpx")
+if (PYCICLE_PROJECT_NAME MATCHES "hpx")
   message("Initialize dashboard : ${CTEST_MODEL} ...")
   set(CTEST_BINARY_DIRECTORY "${PYCICLE_BINARY_DIRECTORY}/inspect")
   ctest_start(${CTEST_MODEL}
@@ -164,7 +164,7 @@ set(CTEST_MODEL Experimental)
   message("Running inspect...")
   ctest_configure()
   ctest_submit(PARTS Configure)
-#endif()
+endif()
 
 #######################################################################
 # Erase any test complete status before starting new dashboard run
@@ -182,6 +182,13 @@ ctest_start(${CTEST_MODEL}
     "${CTEST_BINARY_DIRECTORY}"
 )
 
+
+string(CONCAT CTEST_CONFIGURE_COMMAND
+  " ${CMAKE_COMMAND} -DCMAKE_BUILD_TYPE=${CTEST_BUILD_CONFIGURATION} "
+  " ${CTEST_BUILD_OPTIONS}"
+  " ${CTEST_CONFIGURE_COMMAND} \"-G${CTEST_CMAKE_GENERATOR}\""
+  " ${CTEST_CONFIGURE_COMMAND} \"${CTEST_SOURCE_DIRECTORY}\"")
+
 #######################################################################
 # Wipe build dir when starting a new build
 #######################################################################
@@ -195,12 +202,6 @@ message("Update source... using ${CTEST_SOURCE_DIRECTORY}")
 ctest_update(RETURN_VALUE NB_CHANGED_FILES)
 pycicle_submit(PARTS Update)
 message("Found ${NB_CHANGED_FILES} changed file(s)")
-
-string(CONCAT CTEST_CONFIGURE_COMMAND
-  " ${CMAKE_COMMAND} -DCMAKE_BUILD_TYPE=${CTEST_BUILD_CONFIGURATION} "
-  " ${CTEST_BUILD_OPTIONS}"
-  " ${CTEST_CONFIGURE_COMMAND} \"-G${CTEST_CMAKE_GENERATOR}\""
-  " ${CTEST_CONFIGURE_COMMAND} \"${CTEST_SOURCE_DIRECTORY}\"")
 
 message("CTEST_CONFIGURE_COMMAND is\n${CTEST_CONFIGURE_COMMAND}")
 
