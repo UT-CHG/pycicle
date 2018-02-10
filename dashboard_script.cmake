@@ -198,6 +198,7 @@ string(CONCAT CTEST_CONFIGURE_COMMAND
 # Update dashboard
 #######################################################################
 message("Update source... using ${CTEST_SOURCE_DIRECTORY}")
+ctest_configure()
 ctest_update(RETURN_VALUE NB_CHANGED_FILES)
 message("Found ${NB_CHANGED_FILES} changed file(s)")
 
