@@ -167,6 +167,12 @@ if (PYCICLE_PROJECT_NAME MATCHES "hpx")
 endif()
 
 #######################################################################
+# Wipe build dir when starting a new build
+#######################################################################
+message("Wiping binary directory ${CTEST_BINARY_DIRECTORY}")
+ctest_empty_binary_directory(${CTEST_BINARY_DIRECTORY})
+
+#######################################################################
 # Erase any test complete status before starting new dashboard run
 #######################################################################
 set(CTEST_BINARY_DIRECTORY "${PYCICLE_BINARY_DIRECTORY}")
@@ -182,7 +188,6 @@ ctest_start(${CTEST_MODEL}
     "${CTEST_BINARY_DIRECTORY}"
 )
 
-
 string(CONCAT CTEST_CONFIGURE_COMMAND
   " ${CMAKE_COMMAND} -DCMAKE_BUILD_TYPE=${CTEST_BUILD_CONFIGURATION} "
   " ${CTEST_BUILD_OPTIONS}"
@@ -190,17 +195,10 @@ string(CONCAT CTEST_CONFIGURE_COMMAND
   " ${CTEST_CONFIGURE_COMMAND} \"${CTEST_SOURCE_DIRECTORY}\"")
 
 #######################################################################
-# Wipe build dir when starting a new build
-#######################################################################
-#message("Wiping binary directory ${CTEST_BINARY_DIRECTORY}")
-#ctest_empty_binary_directory(${CTEST_BINARY_DIRECTORY})
-
-#######################################################################
 # Update dashboard
 #######################################################################
 message("Update source... using ${CTEST_SOURCE_DIRECTORY}")
 ctest_update(RETURN_VALUE NB_CHANGED_FILES)
-pycicle_submit(PARTS Update)
 message("Found ${NB_CHANGED_FILES} changed file(s)")
 
 message("CTEST_CONFIGURE_COMMAND is\n${CTEST_CONFIGURE_COMMAND}")
@@ -212,11 +210,11 @@ pycicle_submit(PARTS Update Configure)
 message("Build...")
 set(CTEST_BUILD_FLAGS "-j ${BUILD_PARALLELISM}")
 ctest_build(TARGET "tests" )
-pycicle_submit(PARTS Update Configure Build)
+pycicle_submit(PARTS Build)
 
 message("Test...")
 ctest_test(RETURN_VALUE test_result_ EXCLUDE "compile")
-pycicle_submit(PARTS Update Configure Build Test)
+pycicle_submit(PARTS Test)
 
 if (WITH_COVERAGE AND CTEST_COVERAGE_COMMAND)
   ctest_coverage()
